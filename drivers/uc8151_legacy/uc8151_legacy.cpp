@@ -379,8 +379,12 @@ namespace pimoroni {
   }
 
   void UC8151_Legacy::off() {
-    busy_wait();
-    command(POF); // turn off
+//     busy_wait();
+//     command(POF); // turn off
+    command(0x10); //enter deep sleep
+    uint8_t d_buf[1] = {0x01};
+    data(1, d_buf);
+    sleep_ms(100);
   }
 
 }
