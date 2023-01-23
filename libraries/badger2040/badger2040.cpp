@@ -124,8 +124,8 @@ namespace pimoroni {
 
 
   void Badger2040::clear() {
-    const uint32_t column_len = 128 / 8;
-    const uint32_t buf_len = column_len * 296;
+    const uint32_t column_len = 200 / 8;
+    const uint32_t buf_len = column_len * 200;
     uint8_t* buf = uc8151_legacy.get_frame_buffer();
     
     if (_pen == 0) {
@@ -135,7 +135,7 @@ namespace pimoroni {
       memset(buf, 0, buf_len);
     }
     else {
-      for(uint32_t x = 0; x < 296; x++) {
+      for(uint32_t x = 0; x < 200; x++) {
         uint8_t val = _dither_column_value(x, _pen);
         memset(buf, val, column_len);
         buf += column_len;
@@ -161,20 +161,20 @@ namespace pimoroni {
     image(data, sheet_width, icon_size * index, 0, icon_size, icon_size, dx, dy);
   }
 
-  // Display an image that fills the screen (296*128)
+  // Display an image that fills the screen (200*200)
   void Badger2040::image(const uint8_t* data) {
     uint8_t* ptr = uc8151_legacy.get_frame_buffer();
-    
-    for (uint32_t x = 0; x < 296; ++x) {
+
+    for (uint32_t x = 0; x < 200; ++x) {
       // extract bitmask for this pixel
       uint32_t bm = 0b10000000 >> (x & 0b111);
-      
-      for (uint32_t y = 0; y < 128; y += 8) {
+
+      for (uint32_t y = 0; y < 200; y += 8) {
         uint8_t val = 0;
         for (uint32_t cy = 0; cy < 8; ++cy) {
           // work out byte offset in source data
-          uint32_t o = ((y + cy) * (296 >> 3)) + (x >> 3);
-          
+          uint32_t o = ((y + cy) * (200 >> 3)) + (x >> 3);
+
           // Set bit in val if set in source data
           if (data[o] & bm) {
             val |= 0b10000000 >> cy;
@@ -187,7 +187,7 @@ namespace pimoroni {
 
   // Display an image smaller than the screen (sw*sh) at dx, dy
   void Badger2040::image(const uint8_t *data, int w, int h, int x, int y) {
-    if (x == 0 && y == 0 && w == 296 && h == 128) {
+    if (x == 0 && y == 0 && w == 200 && h == 200) {
       image(data);
     }
     else {
@@ -225,11 +225,11 @@ namespace pimoroni {
     }
     w += _thickness - 1;
     h += _thickness - 1;
-    if (x + w > 296) {
-      w = 296 - x;
+    if (x + w > 200) {
+      w = 200 - x;
     }
-    if (y + h > 128) {
-      h = 128 - y;
+    if (y + h > 200) {
+      h = 200 - y;
     }
 
     if (h >= 8) {
@@ -357,7 +357,7 @@ namespace pimoroni {
             pixel(x + px, y + py);
           }
         }
-      }, message, x, y, 296 - x, std::max(1.0f, s), letter_spacing);
+      }, message, x, y, 200 - x, std::max(1.0f, s), letter_spacing);
     } else {
       hershey::text(_font, [this](int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
         line(x1, y1, x2, y2);

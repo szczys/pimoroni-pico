@@ -82,8 +82,8 @@ mp_obj_t Badger2040_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_
     mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
     mp_arg_parse_all_kw_array(n_args, n_kw, all_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
-    int width = 296;
-    int height = 128;
+    int width = 200;
+    int height = 200;
 
     uint8_t *buffer = nullptr;
 
@@ -337,8 +337,8 @@ mp_obj_t Badger2040_image(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_
         { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
         { MP_QSTR_data, MP_ARG_REQUIRED | MP_ARG_OBJ },
 
-        { MP_QSTR_w, MP_ARG_INT, {.u_int = 296} },
-        { MP_QSTR_h, MP_ARG_INT, {.u_int = 128} },
+        { MP_QSTR_w, MP_ARG_INT, {.u_int = 200} },
+        { MP_QSTR_h, MP_ARG_INT, {.u_int = 200} },
         { MP_QSTR_x, MP_ARG_INT, {.u_int = 0} },
         { MP_QSTR_y, MP_ARG_INT, {.u_int = 0} }
     };
