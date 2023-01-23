@@ -203,7 +203,7 @@ namespace pimoroni {
   }
 
   void UC8151_Legacy::power_off() {
-    command(POF);
+    //command(POF);
   }
 
   void UC8151_Legacy::read(uint8_t reg, size_t len, uint8_t *data) {
@@ -279,12 +279,12 @@ namespace pimoroni {
   }
 
   void UC8151_Legacy::invert(bool inv) {
-    inverted = inv;
-    command(CDI, {(uint8_t)(inverted ? 0b01'01'1100 : 0b01'00'1100)}); // vcom and data interval
+//     inverted = inv;
+//     command(CDI, {(uint8_t)(inverted ? 0b01'01'1100 : 0b01'00'1100)}); // vcom and data interval
   }
 
   void UC8151_Legacy::update_speed(uint8_t speed) {
-    setup(speed);
+//     setup(speed);
   }
 
   uint8_t UC8151_Legacy::update_speed() {
@@ -353,9 +353,9 @@ namespace pimoroni {
   }
 
   void UC8151_Legacy::update(bool blocking) {
-    if(blocking) {
-      busy_wait();
-    }
+//     if(blocking) {
+//       busy_wait();
+//     }
     command(0x22);
     uint8_t d_buf[1] = { 0xF7 } ;
     data(1, d_buf);
