@@ -323,70 +323,98 @@ namespace pimoroni {
   void UC8151_Legacy::setup(uint8_t speed) {
     reset();
 
-    _update_speed = speed;
-
-    if(speed == 0) {
-      command(PSR, {
-        RES_128x296 | LUT_OTP | FORMAT_BW | SHIFT_RIGHT | BOOSTER_ON | RESET_NONE
-      });
-    } else {
-      command(PSR, {
-        RES_128x296 | LUT_REG | FORMAT_BW | SHIFT_RIGHT | BOOSTER_ON | RESET_NONE
-      });
-    }
-    switch(speed) {
-      case 0:
-        // Note: the defult luts are built in so we don't really need to flash them here
-        // they are preserved above for posterity and reference mostly.
-        break;
-      case 1:
-        medium_luts();
-        break;
-      case 2:
-        fast_luts();
-        break;
-      case 3:
-        turbo_luts();
-        break;
-      default:
-        break;
-    }
-
-    command(PWR, {
-      VDS_INTERNAL | VDG_INTERNAL,
-      VCOM_VD | VGHL_16V,
-      0b101011,
-      0b101011,
-      0b101011
-    });
-
-    command(PON); // power on
+    busy_wait();
+    command(0x12);  //SWRESET
     busy_wait();
 
-    // booster soft start configuration
-    command(BTST, {
-      START_10MS | STRENGTH_3 | OFF_6_58US,
-      START_10MS | STRENGTH_3 | OFF_6_58US,
-      START_10MS | STRENGTH_3 | OFF_6_58US
-    });
+    command(0x01); //Driver output control
+    data(3, { 0xC7, 0x00, 0x00 });
 
-    command(PFS, {
-      FRAMES_1
-    });
+    command(0x11); //data entry mode
+    data(1, {0x01});
 
-    command(TSE, {
-      TEMP_INTERNAL | OFFSET_0
-    });
+    command(0x44); //set Ram-X address start/end position
+    data(2, {0x00, 0x18});
 
-    command(TCON, {0x22}); // tcon setting
-    command(CDI, {(uint8_t)(inverted ? 0b01'01'1100 : 0b01'00'1100)}); // vcom and data interval
+    command(0x45); //set Ram-Y address start/end position
+    data(4, {0xC7, 0x00, 0x00, 0x00});   //0xC7-->(199+1)=200
 
-    command(PLL, {
-      HZ_100
-    });
+    command(0x3C); //BorderWavefrom
+    data(1, {0x05});
 
-    command(POF);
+    command(0x18); //Reading temperature sensor
+    data(1, {0x80});
+
+    command(0x4E);   // set RAM x address count to 0;
+    data(1, {0x00});
+    command(0x4F);   // set RAM y address count to 0X199;
+    data(2, {0xC7, 0x00});
     busy_wait();
+
+//     _update_speed = speed;
+// 
+//     if(speed == 0) {
+//       command(PSR, {
+//         RES_128x296 | LUT_OTP | FORMAT_BW | SHIFT_RIGHT | BOOSTER_ON | RESET_NONE
+//       });
+//     } else {
+//       command(PSR, {
+//         RES_128x296 | LUT_REG | FORMAT_BW | SHIFT_RIGHT | BOOSTER_ON | RESET_NONE
+//       });
+//     }
+//     switch(speed) {
+//       case 0:
+// Note: the defult luts are built in so we don't really need to flash them here
+// they are preserved above for posterity and reference mostly.
+//         break;
+//       case 1:
+//         medium_luts();
+//         break;
+//       case 2:
+//         fast_luts();
+//         break;
+//       case 3:
+//         turbo_luts();
+//         break;
+//       default:
+//         break;
+//     }
+// 
+//     command(PWR, {
+//       VDS_INTERNAL | VDG_INTERNAL,
+//       VCOM_VD | VGHL_16V,
+//       0b101011,
+//       0b101011,
+//       0b101011
+//     });
+// 
+//     command(PON); // power on
+//     busy_wait();
+// 
+booster soft start configuration
+//     command(BTST, {
+//       START_10MS | STRENGTH_3 | OFF_6_58US,
+//       START_10MS | STRENGTH_3 | OFF_6_58US,
+//       START_10MS | STRENGTH_3 | OFF_6_58US
+//     });
+// 
+//     command(PFS, {
+//       FRAMES_1
+//     });
+// 
+//     command(TSE, {
+//       TEMP_INTERNAL | OFFSET_0
+//     });
+// 
+//     command(TCON, {0x22}); // tcon setting
+//     command(CDI, {(uint8_t)(inverted ? 0b01'01'1100 : 0b01'00'1100)}); // vcom and data interval
+// 
+//     command(PLL, {
+//       HZ_100
+//     });
+// 
+//     command(POF);
+//     busy_wait();
   }
 
   void UC8151_Legacy::power_off() {
