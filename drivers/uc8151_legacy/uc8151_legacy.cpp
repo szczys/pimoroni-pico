@@ -90,50 +90,20 @@ namespace pimoroni {
   };
 
   void UC8151_Legacy::setup(uint8_t speed) {
-    uint8_t d_buf[10];
     reset();
 
     busy_wait();
     command(0x12);  //SWRESET
     busy_wait();
 
-    command(0x01); //Driver output control
-    d_buf[0] = 0xC7;
-    d_buf[1] = 0x00;
-    d_buf[2] = 0x00;
-    data(3, d_buf);
-
-    command(0x11); //data entry mode
-    d_buf[0] = 0x01;
-    data(1, d_buf);
-
-    command(0x44); //set Ram-X address start/end position
-    d_buf[0] = 0x00;
-    d_buf[1] = 0x18;
-    data(2, d_buf);
-
-    command(0x45); //set Ram-Y address start/end position
-    d_buf[0] = 0xC7;
-    d_buf[1] = 0x00;
-    d_buf[2] = 0x00;
-    d_buf[3] = 0x00;
-    data(4, d_buf);   //0xC7-->(199+1)=200
-
-    command(0x3C); //BorderWavefrom
-    d_buf[0] = 0x05;
-    data(1, d_buf);
-
-    command(0x18); //Reading temperature sensor
-    d_buf[0] = 0x80;
-    data(1, d_buf);
-
-    command(0x4E);   // set RAM x address count to 0;
-    d_buf[0] = 0x00;
-    data(1, d_buf);
-    command(0x4F);   // set RAM y address count to 0X199;
-    d_buf[0] = 0xC7;
-    d_buf[1] = 0x00;
-    data(2, d_buf);
+    command(0x01, {0xC7, 0x00, 0x00}); //Driver output control
+    command(0x11, {0x01}); //data entry mode
+    command(0x44, {0x00, 0x18}); //set Ram-X address start/end position
+    command(0x45, {0xC7, 0x00, 0x00, 0x00}); //set Ram-Y address start/end position
+    command(0x3C, {0x05}); //BorderWavefrom
+    command(0x18, {0x80}); //Reading temperature sensor
+    command(0x4E, {0x00});   // set RAM x address count to 0;
+    command(0x4F, {0xC7, 0x00});   // set RAM y address count to 0X199;
     busy_wait();
 
 //     _update_speed = speed;
@@ -309,56 +279,54 @@ namespace pimoroni {
   void UC8151_Legacy::partial_update(int x, int y, int w, int h, bool blocking) {
     // y is given in columns ("banks"), which are groups of 8 horiontal pixels
     // x is given in pixels
-    if(blocking) {
-      busy_wait();
-    }
-
-    int cols = h / 8;
-    int y1 = y / 8;
-    //int y2 = y1 + cols;
-
-    int rows = w;
-    int x1 = x;
-    //int x2 = x + rows;
-
-    uint8_t partial_window[7] = {
-      (uint8_t)(y),
-      (uint8_t)(y + h - 1),
-      (uint8_t)(x >> 8),
-      (uint8_t)(x & 0xff),
-      (uint8_t)((x + w - 1) >> 8),
-      (uint8_t)((x + w - 1) & 0xff),
-      0b00000001  // PT_SCAN
-    };
-    command(PON); // turn on
-
-    command(PTIN); // enable partial mode
-    command(PTL, sizeof(partial_window), partial_window);
-
-    command(DTM2);
-    for (auto dx = 0; dx < rows; dx++) {
-      int sx = dx + x1;
-      int sy = y1;
-      data(cols, &frame_buffer[sy + (sx * (height / 8))]);
-    }
-    command(DSP); // data stop
-
-    command(DRF); // start display refresh
-
-    if(blocking) {
-      busy_wait();
-
-      command(POF); // turn off
-    }
+//     if(blocking) {
+//       busy_wait();
+//     }
+// 
+//     int cols = h / 8;
+//     int y1 = y / 8;
+// int y2 = y1 + cols;
+// 
+//     int rows = w;
+//     int x1 = x;
+// int x2 = x + rows;
+// 
+//     uint8_t partial_window[7] = {
+//       (uint8_t)(y),
+//       (uint8_t)(y + h - 1),
+//       (uint8_t)(x >> 8),
+//       (uint8_t)(x & 0xff),
+//       (uint8_t)((x + w - 1) >> 8),
+//       (uint8_t)((x + w - 1) & 0xff),
+//       0b00000001  // PT_SCAN
+//     };
+//     command(PON); // turn on
+// 
+//     command(PTIN); // enable partial mode
+//     command(PTL, sizeof(partial_window), partial_window);
+// 
+//     command(DTM2);
+//     for (auto dx = 0; dx < rows; dx++) {
+//       int sx = dx + x1;
+//       int sy = y1;
+//       data(cols, &frame_buffer[sy + (sx * (height / 8))]);
+//     }
+//     command(DSP); // data stop
+// 
+//     command(DRF); // start display refresh
+// 
+//     if(blocking) {
+//       busy_wait();
+// 
+//       command(POF); // turn off
+//     }
   }
 
   void UC8151_Legacy::update(bool blocking) {
 //     if(blocking) {
 //       busy_wait();
 //     }
-    command(0x22);
-    uint8_t d_buf[1] = { 0xF7 } ;
-    data(1, d_buf);
+    command(0x22, {0xF7});
     command(0x20);
     busy_wait();
 
@@ -381,9 +349,7 @@ namespace pimoroni {
   void UC8151_Legacy::off() {
 //     busy_wait();
 //     command(POF); // turn off
-    command(0x10); //enter deep sleep
-    uint8_t d_buf[1] = {0x01};
-    data(1, d_buf);
+    command(0x10, {0x01}); //enter deep sleep
     sleep_ms(100);
   }
 
