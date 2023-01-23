@@ -90,6 +90,7 @@ namespace pimoroni {
   };
 
   void UC8151_Legacy::setup(uint8_t speed) {
+    uint8_t d_buf[10];
     reset();
 
     busy_wait();
@@ -97,27 +98,42 @@ namespace pimoroni {
     busy_wait();
 
     command(0x01); //Driver output control
-    data(3, { 0xC7, 0x00, 0x00 });
+    d_buf[0] = 0xC7;
+    d_buf[1] = 0x00;
+    d_buf[2] = 0x00;
+    data(3, d_buf);
 
     command(0x11); //data entry mode
-    data(1, {0x01});
+    d_buf[0] = 0x01;
+    data(1, d_buf);
 
     command(0x44); //set Ram-X address start/end position
-    data(2, {0x00, 0x18});
+    d_buf[0] = 0x00;
+    d_buf[1] = 0x18;
+    data(2, d_buf);
 
     command(0x45); //set Ram-Y address start/end position
-    data(4, {0xC7, 0x00, 0x00, 0x00});   //0xC7-->(199+1)=200
+    d_buf[0] = 0xC7;
+    d_buf[1] = 0x00;
+    d_buf[2] = 0x00;
+    d_buf[3] = 0x00;
+    data(4, d_buf);   //0xC7-->(199+1)=200
 
     command(0x3C); //BorderWavefrom
-    data(1, {0x05});
+    d_buf[0] = 0x05;
+    data(1, d_buf);
 
     command(0x18); //Reading temperature sensor
-    data(1, {0x80});
+    d_buf[0] = 0x80;
+    data(1, d_buf);
 
     command(0x4E);   // set RAM x address count to 0;
-    data(1, {0x00});
+    d_buf[0] = 0x00;
+    data(1, d_buf);
     command(0x4F);   // set RAM y address count to 0X199;
-    data(2, {0xC7, 0x00});
+    d_buf[0] = 0xC7;
+    d_buf[1] = 0x00;
+    data(2, d_buf);
     busy_wait();
 
 //     _update_speed = speed;
@@ -160,7 +176,7 @@ namespace pimoroni {
 //     command(PON); // power on
 //     busy_wait();
 // 
-booster soft start configuration
+// booster soft start configuration
 //     command(BTST, {
 //       START_10MS | STRENGTH_3 | OFF_6_58US,
 //       START_10MS | STRENGTH_3 | OFF_6_58US,
@@ -340,20 +356,25 @@ booster soft start configuration
     if(blocking) {
       busy_wait();
     }
+    command(0x22);
+    uint8_t d_buf[1] = { 0xF7 } ;
+    data(1, d_buf);
+    command(0x20);
+    busy_wait();
 
-    command(PON); // turn on
-
-    command(PTOU); // disable partial mode
-
-    command(DTM2, (width * height) / 8, frame_buffer); // transmit framebuffer
-    command(DSP); // data stop
-
-    command(DRF); // start display refresh
+//     command(PON); // turn on
+// 
+//     command(PTOU); // disable partial mode
+// 
+//     command(DTM2, (width * height) / 8, frame_buffer); // transmit framebuffer
+//     command(DSP); // data stop
+// 
+//     command(DRF); // start display refresh
 
     if(blocking) {
       busy_wait();
 
-      command(POF); // turn off
+//       command(POF); // turn off
     }
   }
 
