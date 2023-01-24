@@ -49,10 +49,11 @@ namespace pimoroni {
   };
 
   bool UC8151_Legacy::is_busy() {
-    return !gpio_get(BUSY);
+    return gpio_get(BUSY);
   }
 
   void UC8151_Legacy::busy_wait() {
+    return;
     while(is_busy()) {
       tight_loop_contents();
     }
@@ -81,7 +82,7 @@ namespace pimoroni {
 
     gpio_set_function(BUSY, GPIO_FUNC_SIO);
     gpio_set_dir(BUSY, GPIO_IN);
-    gpio_set_pulls(BUSY, true, false);
+    gpio_set_pulls(BUSY, false, true);
 
     gpio_set_function(SCK,  GPIO_FUNC_SPI);
     gpio_set_function(MOSI, GPIO_FUNC_SPI);
@@ -95,6 +96,7 @@ namespace pimoroni {
     busy_wait();
     command(0x12);  //SWRESET
     busy_wait();
+    sleep_ms(100);
 
     command(0x01, {0xC7, 0x00, 0x00}); //Driver output control
     command(0x11, {0x01}); //data entry mode
@@ -323,9 +325,9 @@ namespace pimoroni {
   }
 
   void UC8151_Legacy::update(bool blocking) {
-//     if(blocking) {
-//       busy_wait();
-//     }
+    if(blocking) {
+      busy_wait();
+    }
     command(0x22, {0xF7});
     command(0x20);
     busy_wait();
@@ -339,15 +341,15 @@ namespace pimoroni {
 // 
 //     command(DRF); // start display refresh
 
-    if(blocking) {
-      busy_wait();
+//     if(blocking) {
+//       busy_wait();
 
 //       command(POF); // turn off
-    }
+//     }
   }
 
   void UC8151_Legacy::off() {
-//     busy_wait();
+    busy_wait();
 //     command(POF); // turn off
     command(0x10, {0x01}); //enter deep sleep
     sleep_ms(100);

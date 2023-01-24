@@ -25,11 +25,11 @@ namespace pimoroni {
 
   public:
     Badger2040()
-      : uc8151_legacy(296, 128, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
+      : uc8151_legacy(200, 200, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
     };
     // Constructor for Python-managed buffer
     Badger2040(uint8_t *framebuffer)
-      : uc8151_legacy(296, 128, framebuffer, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
+      : uc8151_legacy(200, 200, framebuffer, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
     };
     void init();
     void update(bool blocking=false);
