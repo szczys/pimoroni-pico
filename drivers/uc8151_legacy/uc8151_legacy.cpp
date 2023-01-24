@@ -328,6 +328,7 @@ namespace pimoroni {
     if(blocking) {
       busy_wait();
     }
+    command(0x24, (width * height) / 8, frame_buffer);
     command(0x22, {0xF7});
     command(0x20);
     busy_wait();
