@@ -281,6 +281,60 @@ namespace pimoroni {
   void UC8151_Legacy::partial_update(int x, int y, int w, int h, bool blocking) {
     // y is given in columns ("banks"), which are groups of 8 horiontal pixels
     // x is given in pixels
+    if(blocking) {
+      busy_wait();
+    }
+    unsigned int i;
+    unsigned int x_end,y_start1,y_start2,y_end1,y_end2;
+    x_start=x_start/8;//
+    x_end=x_start+w/8-1;
+
+    y_start1=0;
+    y_start2=y_start;
+    if(y_start>=256)
+    {
+      y_start1=y_start2/256;
+      y_start2=y_start2%256;
+    }
+    y_end1=0;
+    y_end2=y_start+h-1;
+    if(y_end2>=256)
+    {
+      y_end1=y_end2/256;
+      y_end2=y_end2%256;
+    }
+    // Add hardware reset to prevent background color change
+    reset();
+
+    //Lock the border to prevent flashing
+    command(0x3C, {0x80}); //BorderWavefrom,
+    //
+    command(0x44, {x_start, x_end});       // set RAM x address start/end, in page 35
+    command(0x45, {y_start2, y_start1, y_end2, y_end1});       // set RAM y address start/end, in page 35
+
+
+    command(0x4E, {x_start});   // set RAM x address count to 0;
+    command(0x4F, {y_start2, y_start1});   // set RAM y address count to 0X127;
+
+    //Write Black and White image to RAM
+    command(0x24);
+    for (auto dx = 0; dx < rows; dx++) {
+      int sx = dx + x1;
+      int sy = y1;
+      data(cols, &frame_buffer[sy + (sx * (height / 8))]);
+    }
+
+    command(0x22, {0xF7});
+    command(0x20);
+
+    if(blocking) {
+      busy_wait();
+
+      //command(POF); // turn off
+    }
+
+    // y is given in columns ("banks"), which are groups of 8 horiontal pixels
+    // x is given in pixels
 //     if(blocking) {
 //       busy_wait();
 //     }
