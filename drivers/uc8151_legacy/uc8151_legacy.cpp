@@ -332,6 +332,9 @@ namespace pimoroni {
     command(0x22, {0xF7});
     command(0x20);
     busy_wait();
+    command(0x22, {0x83});
+    command(0x20);
+    busy_wait();
 
 //     command(PON); // turn on
 // 
