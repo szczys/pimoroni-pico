@@ -237,7 +237,7 @@ namespace pimoroni {
       uint8_t* buf = uc8151_legacy.get_frame_buffer();
       
       for(int cx = x; cx < x + w; cx++) {
-        uint8_t* buf_ptr = &buf[cx * 16 + y / 8];
+        uint8_t* buf_ptr = &buf[cx * 25 + y / 8];
         uint8_t first_mask = 0xff >> (y & 7);
         uint8_t last_mask = 0xff >> ((y + h) & 7);
         uint32_t val = _dither_column_value(cx, _pen);
