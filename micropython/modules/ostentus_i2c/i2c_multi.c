@@ -14,9 +14,18 @@ static inline void byte_handler_pio();
 static inline void stop_handler_pio();
 static inline uint8_t transpond_byte(uint8_t byte);
 
+static bool initialized = false;
+
 void i2c_multi_init(PIO pio, uint pin)
 {
-    i2c_multi = (i2c_multi_t *)malloc(sizeof(i2c_multi_t));
+    if (initialized) {
+        // For micropython soft reset, remove PIO and start again
+        i2c_multi_disable();
+        i2c_multi_remove();
+    }
+    initialized = true;
+
+    gpio_put(LED_PIN, 0); i2c_multi = (i2c_multi_t *)malloc(sizeof(i2c_multi_t));
     i2c_multi->pio = pio;
     i2c_multi->status = I2C_IDLE;
     i2c_multi->pin = pin;
@@ -24,6 +33,7 @@ void i2c_multi_init(PIO pio, uint pin)
     i2c_multi_disable_all_addresses();
     i2c_multi->buffer = NULL;
     i2c_multi->buffer_start = NULL;
+
     uint pio_irq0 = (pio == pio0 ? PIO0_IRQ_0 : PIO1_IRQ_0);
     uint pio_irq1 = (pio == pio0 ? PIO0_IRQ_1 : PIO1_IRQ_1);
 
