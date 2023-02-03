@@ -25,7 +25,7 @@ void i2c_multi_init(PIO pio, uint pin)
     }
     initialized = true;
 
-    gpio_put(LED_PIN, 0); i2c_multi = (i2c_multi_t *)malloc(sizeof(i2c_multi_t));
+    i2c_multi = (i2c_multi_t *)malloc(sizeof(i2c_multi_t));
     i2c_multi->pio = pio;
     i2c_multi->status = I2C_IDLE;
     i2c_multi->pin = pin;
