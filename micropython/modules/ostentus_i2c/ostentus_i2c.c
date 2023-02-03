@@ -2,20 +2,18 @@
 #include "py/runtime.h"
 #include "i2c_fifo.h"
 
-char my_string[] = "Temperature";
-
-STATIC mp_obj_t init() {
+STATIC mp_obj_t init(void) {
     fifo_init();
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_0(init_obj, init);
 
-STATIC mp_obj_t has_data() {
+STATIC mp_obj_t has_data(void) {
     return mp_obj_new_bool(fifo_has_data());
 }
 MP_DEFINE_CONST_FUN_OBJ_0(has_data_obj, has_data);
 
-STATIC mp_obj_t my_function() {
+STATIC mp_obj_t pop(void) {
     // Your code here!
     uint8_t f_buf[64];
     fifo_pop(f_buf);
@@ -23,19 +21,7 @@ STATIC mp_obj_t my_function() {
     // signature: mp_obj_t mp_obj_new_bytes(const byte* data, size_t len);
     return mp_obj_new_bytes((const unsigned char *)f_buf, f_buf[1]+2);
 }
-MP_DEFINE_CONST_FUN_OBJ_0(my_function_obj, my_function);
-
-// This is the function which will be called from Python as ostentus_i2c.add_ints(a, b).
-STATIC mp_obj_t example_add_ints(mp_obj_t a_obj, mp_obj_t b_obj) {
-    // Extract the ints from the micropython input objects.
-    int a = mp_obj_get_int(a_obj);
-    int b = mp_obj_get_int(b_obj);
-
-    // Calculate the addition and convert to MicroPython object.
-    return mp_obj_new_int(a + b);
-}
-// Define a Python reference to the function above.
-STATIC MP_DEFINE_CONST_FUN_OBJ_2(example_add_ints_obj, example_add_ints);
+MP_DEFINE_CONST_FUN_OBJ_0(pop_obj, pop);
 
 // Define all properties of the module.
 // Table entries are key/value pairs of the attribute name (a string)
@@ -45,8 +31,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_2(example_add_ints_obj, example_add_ints);
 STATIC const mp_rom_map_elem_t example_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_ostentus_i2c) },
     { MP_ROM_QSTR(MP_QSTR_init), MP_ROM_PTR(&init_obj) },
-    { MP_ROM_QSTR(MP_QSTR_add_ints), MP_ROM_PTR(&example_add_ints_obj) },
-    { MP_ROM_QSTR(MP_QSTR_my_function), MP_ROM_PTR(&my_function_obj) },
+    { MP_ROM_QSTR(MP_QSTR_pop), MP_ROM_PTR(&pop_obj) },
     { MP_ROM_QSTR(MP_QSTR_has_data), MP_ROM_PTR(&has_data_obj) },
 };
 STATIC MP_DEFINE_CONST_DICT(example_module_globals, example_module_globals_table);
