@@ -6,7 +6,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../")
 include(pimoroni_i2c/micropython)
 include(pimoroni_bus/micropython)
 
-include(ostentus_i2c/micropython)
+include(../../../../module/ostentus_i2c/micropython)
 
 include(breakout_dotmatrix/micropython)
 include(breakout_encoder/micropython)
