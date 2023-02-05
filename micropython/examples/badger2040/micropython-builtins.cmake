@@ -41,7 +41,7 @@ convert_image(usermod_badger2040 launchericons)
 
 convert_raw(usermod_badger2040 289-0-wind-in-the-willows-abridged.txt witw)
 
-copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/assets/boot.py boot)
+copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/boot.py boot)
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/launcher.py _launcher)
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/clock.py _clock)
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/fonts.py _fonts)
@@ -53,3 +53,8 @@ copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/help.py _help)
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/info.py _info)
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/qrgen.py _qrgen)
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/badger_os.py badger_os)
+copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/ostentus.py ostentus)
+copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/ostentus_leds.py ostentus_leds)
+copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/ostentus_slideshow.py ostentus_slideshow)
+copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/splashscreen_rd.py splashscreen_rd)
+
