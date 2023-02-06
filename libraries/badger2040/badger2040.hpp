@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "drivers/uc8151_legacy/uc8151_legacy.hpp"
+#include "../../../../drivers/GDEH0154D67/GDEH0154D67.hpp"
 
 #include "libraries/hershey_fonts/hershey_fonts.hpp"
 #include "libraries/bitmap_fonts/bitmap_fonts.hpp"

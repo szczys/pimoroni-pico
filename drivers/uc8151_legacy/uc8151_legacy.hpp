@@ -137,12 +137,12 @@ namespace pimoroni {
     spi_inst_t *spi = PIMORONI_SPI_DEFAULT_INSTANCE;
 
     // interface pins with our standard defaults where appropriate
-    uint CS     = 17;
-    uint DC     = 20;
-    uint SCK    = 18;
-    uint MOSI   = 19;
-    uint BUSY   = 26;
-    uint RESET  = 21;
+    uint CS     = SPI_BG_FRONT_CS;
+    uint DC     = SPI_DEFAULT_MISO;
+    uint SCK    = SPI_DEFAULT_SCK;
+    uint MOSI   = SPI_DEFAULT_MOSI;
+    uint BUSY   = PIN_UNUSED;
+    uint RESET  = PIN_UNUSED;
 
     bool inverted = false;
 
@@ -160,7 +160,7 @@ namespace pimoroni {
     UC8151_Legacy(uint16_t width, uint16_t height,
            spi_inst_t *spi,
            uint CS, uint DC, uint SCK, uint MOSI,
-           uint BUSY, uint RESET) :
+           uint BUSY = PIN_UNUSED, uint RESET = PIN_UNUSED) :
       width(width), height(height),
       frame_buffer(new uint8_t[width * height / 8]),
       spi(spi),
@@ -170,7 +170,7 @@ namespace pimoroni {
            uint8_t *frame_buffer,
            spi_inst_t *spi,
            uint CS, uint DC, uint SCK, uint MOSI,
-           uint BUSY, uint RESET) :
+           uint BUSY = PIN_UNUSED, uint RESET = PIN_UNUSED) :
       width(width), height(height),
       frame_buffer(frame_buffer),
       spi(spi),
