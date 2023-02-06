@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../../../../drivers/GDEH0154D67/GDEH0154D67.hpp"
+#include "../../../../drivers/ssd1681/ssd1681.hpp"
 
 #include "libraries/hershey_fonts/hershey_fonts.hpp"
 #include "libraries/bitmap_fonts/bitmap_fonts.hpp"
@@ -14,7 +14,7 @@ namespace pimoroni {
 
   class Badger2040 {
   protected:
-    UC8151_Legacy uc8151_legacy;
+    SSD1681 ssd1681;
     const hershey::font_t *_font = &hershey::futural;
     const bitmap::font_t *_bitmap_font = nullptr;
     uint8_t _pen = 0;
@@ -25,11 +25,11 @@ namespace pimoroni {
 
   public:
     Badger2040()
-      : uc8151_legacy(200, 200, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
+      : ssd1681(200, 200, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
     };
     // Constructor for Python-managed buffer
     Badger2040(uint8_t *framebuffer)
-      : uc8151_legacy(200, 200, framebuffer, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
+      : ssd1681(200, 200, framebuffer, spi0, CS, DC, CLK, MOSI, BUSY, RESET) {
     };
     void init();
     void update(bool blocking=false);
