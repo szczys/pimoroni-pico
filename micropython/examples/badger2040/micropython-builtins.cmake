@@ -58,3 +58,4 @@ copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_p
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/ostentus_slideshow.py ostentus_slideshow)
 copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/splashscreen_rd.py splashscreen_rd)
 
+copy_module(usermod_badger2040 ${CMAKE_CURRENT_LIST_DIR}/../../../../../module_py/cap_touch.py cap_touch)
