@@ -127,12 +127,9 @@ MICROPY_EVENT_POLL_HOOK
 #endif
     }
 
-    absolute_time_t t_end = make_timeout_time_ms(self->badger2040->update_time());
     self->badger2040->update(false);
 
-    // Ensure blocking for the minimum amount of time
-    // in cases where "is_busy" is unreliable.
-    while(self->badger2040->is_busy() || absolute_time_diff_us(get_absolute_time(), t_end) > 0) {
+    while(self->badger2040->is_busy()) {
 #ifdef MICROPY_EVENT_POLL_HOOK
 MICROPY_EVENT_POLL_HOOK
 #endif
@@ -171,12 +168,57 @@ MICROPY_EVENT_POLL_HOOK
 #endif
     }
 
-    absolute_time_t t_end = make_timeout_time_ms(self->badger2040->update_time());
     self->badger2040->partial_update(x, y, w, h, false);
 
-    // Ensure blocking for the minimum amount of time
-    // in cases where "is_busy" is unreliable.
-    while(self->badger2040->is_busy() || absolute_time_diff_us(get_absolute_time(), t_end) > 0) {
+    while(self->badger2040->is_busy()) {
+#ifdef MICROPY_EVENT_POLL_HOOK
+MICROPY_EVENT_POLL_HOOK
+#endif
+    }
+
+    self->badger2040->power_off();
+
+    return mp_const_none;
+}
+
+mp_obj_t Badger2040_partial_update_data(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+    enum { ARG_self, ARG_x, ARG_y, ARG_w, ARG_h };
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_x, MP_ARG_REQUIRED | MP_ARG_INT },
+        { MP_QSTR_y, MP_ARG_REQUIRED | MP_ARG_INT },
+        { MP_QSTR_w, MP_ARG_REQUIRED | MP_ARG_INT },
+        { MP_QSTR_h, MP_ARG_REQUIRED | MP_ARG_INT }
+    };
+
+    // Parse args.
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    int x = args[ARG_x].u_int;
+    int y = args[ARG_y].u_int;
+    int w = args[ARG_w].u_int;
+    int h = args[ARG_h].u_int;
+
+    _Badger2040_obj_t *self = MP_OBJ_TO_PTR2(args[ARG_self].u_obj, _Badger2040_obj_t);
+
+    self->badger2040->partial_update_data(x, y, w, h, false);
+
+    return mp_const_none;
+}
+
+mp_obj_t Badger2040_partial_update_execute(mp_obj_t self_in) {
+    _Badger2040_obj_t *self = MP_OBJ_TO_PTR2(self_in, _Badger2040_obj_t);
+
+    while(self->badger2040->is_busy()) {
+#ifdef MICROPY_EVENT_POLL_HOOK
+MICROPY_EVENT_POLL_HOOK
+#endif
+    }
+
+    self->badger2040->partial_update_execute();
+
+    while(self->badger2040->is_busy()) {
 #ifdef MICROPY_EVENT_POLL_HOOK
 MICROPY_EVENT_POLL_HOOK
 #endif

@@ -389,6 +389,26 @@ partial_update(
 )
 ```
 
+Two functions are broken out to facilitate partial updates to multiple portions
+of the screen. When changing multiple parts of the screen, all parts need to be
+reupdated, even if some of them have not changed.
+
+```python
+pen(0)
+rectangle(0,0,200,16)
+pen(15)
+text("Some new text", 0, 8, 0.6)
+partial_update_data(0, 0, 200, 16)
+
+pen(0)
+rectangle(0,32,200,16)
+pen(15)
+text("Even more new text", 0, 40, 0.6)
+partial_update_data(0, 32, 200, 16)
+
+partial_update_execute();
+```
+
 ### Invert (aka Dark Mode)
 
 Badger 2040 can invert all your display data for a quick and easy dark mode:

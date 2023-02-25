@@ -324,6 +324,14 @@ namespace pimoroni {
     ssd1681.partial_update(x, y, w, h, blocking);
   }
 
+  void Badger2040::partial_update_data(int x, int y, int w, int h, bool blocking) {
+    ssd1681.partial_update_data(x, y, w, h, blocking);
+  }
+
+  void Badger2040::partial_update_execute() {
+    ssd1681.partial_update_execute();
+  }
+
   void Badger2040::update(bool blocking) {
     ssd1681.update(blocking);
   }
